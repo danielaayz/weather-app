@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react";
 import axios from "axios";
 import WeatherBackground from "./WeatherBackground";
+import { FaSearch } from "react-icons/fa";
 
 export interface WeatherData {
    name: string;
@@ -63,21 +64,26 @@ const Weather: React.FC = () => {
       e.preventDefault();
       if (city.trim()) {
          fetchWeather();
+         setCity("");
       }
    };
 
    return (
       <WeatherBackground weatherData={weatherData}>
          <div>
-            <h1>Weather App</h1>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="relative">
                <input
                   type="text"
                   value={city}
                   onChange={handleInputChange}
                   placeholder="Enter city name"
+                  className="w-full bg-transparent pl-10 pr-4 py-2 shadow-md focus:outline-none focus:ring-2 focus:ring-gray-300 placeholder-gray-500"
                />
-               <button type="submit">Get Weather</button>
+               <button
+                  type="submit"
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 focus:outline-none">
+                  <FaSearch className="text-lg" />
+               </button>
             </form>
 
             {/* Visa laddningsmeddelande, väderdata eller felmeddelande */}
