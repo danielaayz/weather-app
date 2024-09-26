@@ -2,12 +2,17 @@ import React, { useState, useCallback } from "react";
 import axios from "axios";
 import WeatherBackground from "./WeatherBackground";
 import { FaSearch } from "react-icons/fa";
+import WeatherIcon from "./WeatherIcon";
 
 export interface WeatherData {
    name: string;
+   sys: {
+      country: string;
+   };
    main: {
       temp: number;
-      humidity: number;
+      temp_max: number;
+      temp_min: number;
    };
    weather: Array<{
       description: string;
@@ -51,6 +56,7 @@ const Weather: React.FC = () => {
       } finally {
          // Slå av loading när anropet är klart
          setLoading(false);
+         setCity("");
       }
    }, [city]);
 
@@ -64,14 +70,25 @@ const Weather: React.FC = () => {
       e.preventDefault();
       if (city.trim()) {
          fetchWeather();
-         setCity("");
       }
+   };
+
+   // Formatera dagens datum
+   const getFormattedDate = (): string => {
+      const today = new Date();
+      const options: Intl.DateTimeFormatOptions = {
+         weekday: "long",
+         year: "numeric",
+         month: "short",
+         day: "numeric",
+      };
+      return today.toLocaleDateString("en-GB", options);
    };
 
    return (
       <WeatherBackground weatherData={weatherData}>
-         <div>
-            <form onSubmit={handleSubmit} className="relative">
+         <div className="w-full max-w-md mx-auto p-4">
+            <form onSubmit={handleSubmit} className="relative mb-8">
                <input
                   type="text"
                   value={city}
@@ -92,11 +109,40 @@ const Weather: React.FC = () => {
             ) : error ? (
                <p>{error}</p>
             ) : weatherData ? (
-               <div>
-                  <h2>{weatherData.name}</h2>
-                  <p>{weatherData.main.temp}°C</p>
-                  <p>Condition: {weatherData.weather[0].description}</p>
-                  <p>Humidity: {weatherData.main.humidity}%</p>
+               <div className="text-left">
+                  {/* Visa datum */}
+                  <div className="mb-4">
+                     <p className="text-sm sm:text-md md:text-xl font-medium text-gray-700">
+                        {getFormattedDate()}
+                     </p>
+                  </div>
+                  {/* Stadens namn */}
+                  <h2 className="text-3xl  mb-[8px]">{weatherData.name}</h2>
+
+                  {/* Land */}
+                  <p className="text-sm text-gray-600 mb-4">
+                     {weatherData.sys.country}
+                  </p>
+
+                  {/* Väderikonen */}
+                  <div className="mb-4">
+                     <WeatherIcon
+                        weatherMain={weatherData.weather[0]?.main || null}
+                     />
+                  </div>
+
+                  {/* Temperatur och annan väderinformation */}
+                  <div className="text-[20px] font-light">
+                     <p className="text-[50px] flex items-start">
+                        {Math.round(weatherData.main.temp)}
+                        <span className="text-sm ml-1">°C</span>
+                     </p>
+                     <p>{weatherData.weather[0].description}</p>
+                     <p className="text-sm">
+                        H: {Math.round(weatherData.main.temp_max)} L:{" "}
+                        {Math.round(weatherData.main.temp_min)}
+                     </p>
+                  </div>
                </div>
             ) : (
                <p>Enter a city to get weather information.</p>
