@@ -1,6 +1,5 @@
 import React from "react";
 import { WeatherData } from "./Weather";
-import WeatherIcon from "./WeatherIcon";
 
 interface WeatherBackgroundProps {
    weatherData: WeatherData | null;
@@ -44,7 +43,6 @@ const WeatherBackground: React.FC<WeatherBackgroundProps> = ({
       <>
          <div
             className={`${getBackgroundColor()} min-h-screen transition-colors duration-500 flex flex-col justify-center items-center`}>
-            <WeatherIcon weatherMain={weatherData?.weather[0]?.main || null} />
             {children}
          </div>
       </>
