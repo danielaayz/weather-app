@@ -1,7 +1,8 @@
 import React, { useState, useCallback } from "react";
 import axios from "axios";
+import WeatherBackground from "./WeatherBackground";
 
-interface WeatherData {
+export interface WeatherData {
    name: string;
    main: {
       temp: number;
@@ -9,6 +10,7 @@ interface WeatherData {
    };
    weather: Array<{
       description: string;
+      main: string;
    }>;
 }
 
@@ -65,34 +67,36 @@ const Weather: React.FC = () => {
    };
 
    return (
-      <div>
-         <h1>Weather App</h1>
-         <form onSubmit={handleSubmit}>
-            <input
-               type="text"
-               value={city}
-               onChange={handleInputChange}
-               placeholder="Enter city name"
-            />
-            <button type="submit">Get Weather</button>
-         </form>
+      <WeatherBackground weatherData={weatherData}>
+         <div>
+            <h1>Weather App</h1>
+            <form onSubmit={handleSubmit}>
+               <input
+                  type="text"
+                  value={city}
+                  onChange={handleInputChange}
+                  placeholder="Enter city name"
+               />
+               <button type="submit">Get Weather</button>
+            </form>
 
-         {/* Visa laddningsmeddelande, väderdata eller felmeddelande */}
-         {loading ? (
-            <p>Loading weather data...</p>
-         ) : error ? (
-            <p>{error}</p>
-         ) : weatherData ? (
-            <div>
-               <h2>{weatherData.name}</h2>
-               <p>{weatherData.main.temp}°C</p>
-               <p>Condition: {weatherData.weather?.[0]?.description}</p>
-               <p>Humidity: {weatherData.main.humidity}%</p>
-            </div>
-         ) : (
-            <p>Enter a city to get weather information.</p>
-         )}
-      </div>
+            {/* Visa laddningsmeddelande, väderdata eller felmeddelande */}
+            {loading ? (
+               <p>Loading weather data...</p>
+            ) : error ? (
+               <p>{error}</p>
+            ) : weatherData ? (
+               <div>
+                  <h2>{weatherData.name}</h2>
+                  <p>{weatherData.main.temp}°C</p>
+                  <p>Condition: {weatherData.weather[0].description}</p>
+                  <p>Humidity: {weatherData.main.humidity}%</p>
+               </div>
+            ) : (
+               <p>Enter a city to get weather information.</p>
+            )}
+         </div>
+      </WeatherBackground>
    );
 };
 
