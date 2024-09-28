@@ -14,7 +14,7 @@ const WeatherBackground: React.FC<WeatherBackgroundProps> = ({
    const getBackgroundColor = (): string => {
       if (!weatherData || !weatherData.weather[0]) {
          // Standard bakgrundsfärg
-         return "#ffffff";
+         return "#D5D9D4";
       }
       // Hämtar väderbeskrivningen från det första elementen i weather-arrayen
       const weatherMain = weatherData.weather[0].main;
@@ -35,7 +35,7 @@ const WeatherBackground: React.FC<WeatherBackgroundProps> = ({
          case "fog":
             return "bg-[#E6E6E6]";
          default:
-            return "#F0F8FF";
+            return "#D5D9D4";
       }
    };
 
