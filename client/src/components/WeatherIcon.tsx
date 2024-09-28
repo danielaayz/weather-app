@@ -17,18 +17,18 @@ const WeatherIcon: React.FC<WeatherIconProps> = ({ weatherMain }) => {
 
    switch (weatherMain.toLowerCase()) {
       case "clear":
-         return <FaSun className="text-yellow-500 text-[150px]" />;
+         return <FaSun className="text-yellow-500 text-[250px]" />;
       case "clouds":
-         return <FaCloud className="text-gray-500 text-[150px]" />;
+         return <FaCloud className="text-gray-500 text-[250px]" />;
       case "rain":
-         return <FaCloudRain className="text-blue-500 text-[150px]" />;
+         return <FaCloudRain className="text-blue-500 text-[250px]" />;
       case "snow":
-         return <FaSnowflake className="text-blue-300 text-[150px]" />;
+         return <FaSnowflake className="text-blue-300 text-[250px]" />;
       case "thunderstorm":
-         return <FaBolt className="text-yellow-600 text-[150px]" />;
+         return <FaBolt className="text-yellow-600 text-[250px]" />;
       case "mist":
       case "fog":
-         return <FaSmog className="text-gray-400 text-[150px]" />;
+         return <FaSmog className="text-gray-400 text-[250px]" />;
       default:
          return null;
    }
