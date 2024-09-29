@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from "react";
 import axios from "axios";
 import WeatherBackground from "./WeatherBackground";
-import { FaSearch } from "react-icons/fa";
 import WeatherIcon from "./WeatherIcon";
+import CitySearchInput from "./CitySearchInput";
 
 export interface WeatherData {
    name: string;
@@ -60,19 +60,6 @@ const Weather: React.FC = () => {
       }
    }, [city]);
 
-   // Funktion som hanterar ändringar i inputfältet
-   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-      setCity(e.target.value);
-   };
-
-   // Funktion som anropas när användaren klickar på knappen
-   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
-      e.preventDefault();
-      if (city.trim()) {
-         fetchWeather();
-      }
-   };
-
    // Formatera dagens datum
    const getFormattedDate = (): string => {
       const today = new Date();
@@ -88,7 +75,7 @@ const Weather: React.FC = () => {
    return (
       <WeatherBackground weatherData={weatherData}>
          <div className="w-full max-w-md mx-auto p-4">
-            <form onSubmit={handleSubmit} className="relative mb-8">
+            {/* <form onSubmit={handleSubmit} className="relative mb-8">
                <input
                   type="text"
                   value={city}
@@ -101,7 +88,12 @@ const Weather: React.FC = () => {
                   className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 focus:outline-none">
                   <FaSearch className="text-lg" />
                </button>
-            </form>
+            </form> */}
+            <CitySearchInput
+               city={city}
+               setCity={setCity}
+               onSearch={fetchWeather}
+            />
 
             {/* Visa laddningsmeddelande, väderdata eller felmeddelande */}
             {loading ? (
@@ -135,7 +127,7 @@ const Weather: React.FC = () => {
                   <div className="text-[20px] font-light">
                      <p className="text-[50px] flex items-start">
                         {Math.round(weatherData.main.temp)}
-                        <span className="text-sm ml-1">°C</span>
+                        <span className="text-sm ml-1 mt-[15px]">°C</span>
                      </p>
                      <p>{weatherData.weather[0].description}</p>
                      <p className="text-sm">
