@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { FaSearch, FaRainbow } from "react-icons/fa";
 import axios from "axios";
 import { FaMapMarkerAlt } from "react-icons/fa";
-//import IconBanner from "./IconBanner";
 
 export interface CitySearchInputProps {
    city: string;
@@ -97,7 +96,7 @@ const CitySearchInput: React.FC<CitySearchInputProps> = ({
          {/* Visa ikonen ovanför sökfältet om showIcon är true */}
          {showIcon && (
             <div className="flex justify-center mb-4">
-               <FaRainbow className="text-5xl animate-fade-in" />
+               <FaRainbow className="text-5xl animate-pulse text-fuchsia-300 text-[250px]" />
             </div>
          )}
 
