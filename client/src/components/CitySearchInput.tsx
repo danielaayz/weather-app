@@ -1,17 +1,24 @@
 import React, { useState } from "react";
 import { FaSearch, FaRainbow } from "react-icons/fa";
 import axios from "axios";
+import { FaMapMarkerAlt } from "react-icons/fa";
 //import IconBanner from "./IconBanner";
 
 export interface CitySearchInputProps {
    city: string;
    setCity: React.Dispatch<React.SetStateAction<string>>;
-   onSearch: () => Promise<void>;
+   onSearch: (name?: string, country?: string) => Promise<void>;
 }
 
 interface City {
    name: string;
    country: string;
+}
+
+interface CityApiResponse {
+   name: string;
+   country: string;
+   state?: string;
 }
 
 const CitySearchInput: React.FC<CitySearchInputProps> = ({
@@ -29,18 +36,20 @@ const CitySearchInput: React.FC<CitySearchInputProps> = ({
 
       if (inputValue.length >= 2) {
          try {
-            const response = await axios.get(
+            const response = await axios.get<CityApiResponse[]>(
                `http://localhost:5000/api/city-search?city=${inputValue}`
             );
+            console.log(response.data);
 
             const filteredSuggestions: City[] = response.data
-               .filter((city: City) =>
-                  city.name.toLowerCase().startsWith(inputValue.toLowerCase())
+               .filter((city: CityApiResponse) =>
+                  city.name.toLowerCase().includes(inputValue.toLowerCase())
                )
-               .map((city: City) => ({
+               .map((city: CityApiResponse) => ({
                   name: city.name,
                   country: city.country,
                }));
+            //    .filter((city: City) => city.name && city.sys.country);
 
             // Filtrera bort dubbletter baserat på både stadens namn och land
             const uniqueSuggestions = filteredSuggestions.filter(
@@ -60,11 +69,6 @@ const CitySearchInput: React.FC<CitySearchInputProps> = ({
       }
    };
 
-   // Funktion för att hantera ändringar i inputfältet
-   //    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-   //       setCity(e.target.value);
-   //    };
-
    // Funktion för att hantera formulärinlämning
    const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
       e.preventDefault();
@@ -72,6 +76,11 @@ const CitySearchInput: React.FC<CitySearchInputProps> = ({
          setShowIcon(false);
          setSuggestions([]);
          onSearch();
+
+         const [cityName, countryCode] = city
+            .split(", ")
+            .map((item) => item.trim());
+         onSearch(cityName, countryCode);
       }
    };
 
@@ -93,13 +102,13 @@ const CitySearchInput: React.FC<CitySearchInputProps> = ({
          )}
 
          {/* Sökfält */}
-         <form onSubmit={handleSubmit} className="relative mb-8">
+         <form onSubmit={handleSubmit} className="relative ">
             <input
                type="text"
                value={city}
                onChange={handleInputChange}
                placeholder="Enter city name"
-               className="w-full bg-transparent pl-10 pr-4 py-2 shadow-md focus:outline-none focus:ring-2 focus:ring-gray-300 placeholder-gray-500"
+               className="w-full bg-transparent pl-10 pr-4 py-2 shadow-md focus:bg-white focus:outline-none focus:ring-2 focus:ring-gray-300 placeholder-gray-500"
             />
             <button
                type="submit"
@@ -110,16 +119,22 @@ const CitySearchInput: React.FC<CitySearchInputProps> = ({
 
          {/* Dropdown med stadförslag */}
          {suggestions.length > 0 && (
-            <ul className="absolute z-10 w-full bg-white shadow-md max-h-40 overflow-auto rounded-md">
+            <ul className="absolute z-10 w-full bg-white shadow-md max-h-40 overflow-auto">
                {suggestions.map((suggestion, index) => (
                   <li
                      key={index}
                      onClick={() => handleSuggestionClick(suggestion)}
-                     className="p-2 cursor-pointer hover:bg-gray-100">
-                     {suggestion.name}, {suggestion.country}
+                     className="pl-10 pr-4 py-2 cursor-pointer hover:bg-gray-100 relative w-full border-b last:border-b-0">
+                     <FaMapMarkerAlt className="absolute left-2.5 text-gray-500" />
+                     <span className="text-left">
+                        {suggestion.name}, {suggestion.country}
+                     </span>
                   </li>
                ))}
             </ul>
+         )}
+         {suggestions.length === 0 && city.length >= 2 && (
+            <div className="p-2 text-gray-500">No results where found.</div>
          )}
       </div>
    );
