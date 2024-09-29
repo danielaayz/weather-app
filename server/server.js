@@ -19,6 +19,7 @@ app.get("/api/weather", async (req, res) => {
          `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
       );
       res.json(response.data);
+      console.log(response.data);
    } catch (error) {
       res.status(500).json({ error: "Failed to fetch weather data" });
    }
